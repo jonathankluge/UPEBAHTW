@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <iostream>
+#include<iostream>
+
+using namespace std;
 
 bool bang_bang_control(float voltage, float current, bool state)
 {
@@ -35,22 +37,41 @@ bool bang_bang_control(float voltage, float current, bool state)
 	return ret;
 }
 
-//TEST2
-//TEST3
+float strom(int on_off, float t)		//on_off als Vorzeichen für anstieg bzw. Abfall des Stromes
+{
+	float current = 0.0f;
+	int Anstieg = 12; //Anstieg in A/s
+
+	return on_off* Anstieg * t;
+
+}
+
+
 
 int main() {
 
-	float u = 0.0f;
-	float i = 0.0f;
+	float voltage = 0.0f;
+	float current = 0.0f;
 	bool state = false;
 	float c = 50;
 	float u_target = 102.0f;
 	float q = 0.0f;
+	int i = 0;
 
-	while (u < u_target) {
-		// runs every 100µs
-		state = bang_bang_control(u, i, state);
-		printf("Ausgabewert von bang =%d\n", state);
+	
+	
+
+	while (voltage < u_target) 
+	{
+
+		for (i = 0; i < 100; i++)
+		{
+
+				// runs every 100µs
+			state = bang_bang_control(voltage, current, state);
+			cout<<"Zustand"<< state;
+		}
+			
 
 
 	}
