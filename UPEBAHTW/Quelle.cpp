@@ -50,13 +50,13 @@ float strom(int on_off, float t)		//on_off als Vorzeichen für anstieg bzw. Abfa
 
 int main() {
 
-	float voltage = 0.0f;
+	float voltage = 12.0f;
 	float current = 0.0f;
 	bool state = false;
 	float c = 50;
 	float u_target = 102.0f;
 	float q = 0.0f;
-	int i = 0;
+	float i = 0.0f;
 
 	
 	
@@ -66,9 +66,10 @@ int main() {
 
 		for (i = 0; i < 100; i++)
 		{
-
-				// runs every 100µs
-			state = bang_bang_control(voltage, current, state);
+			state = bang_bang_control(current, voltage, state);
+			current = strom(-1, i); 
+		    // runs every 100µs
+			//state = bang_bang_control(voltage, current, state);
 			cout<<"Zustand"<< state;
 		}
 			
