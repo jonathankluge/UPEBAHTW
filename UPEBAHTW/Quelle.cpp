@@ -12,11 +12,11 @@ bool bang_bang_control(float voltage, float current, bool state)
 	bool IGBT = 0;
 
 	if (voltage >= u_cond) {
-		ret = false;  // IGBT aus bzw. zu start zurück
+		ret = false;  // IGBT aus bzw. zu start zurÃ¼ck
 
 	}
 	else {
-		if (current < i_cond - delta_i) {  //Strom ist größer als i_max
+		if (current < i_cond - delta_i) {  //Strom ist grÃ¶ÃŸer als i_max
 
 			IGBT = 1;
 			ret = IGBT;
@@ -35,8 +35,7 @@ bool bang_bang_control(float voltage, float current, bool state)
 	return ret;
 }
 
-//fuck you ines2
-//Test3
+
 int main() {
 
 	float u = 0.0f;
@@ -47,7 +46,7 @@ int main() {
 	float q = 0.0f;
 
 	while (u < u_target) {
-		// runs every 100µs
+		// runs every 100Âµs
 		state = bang_bang_control(u, i, state);
 		printf("Ausgabewert von bang =%d\n", state);
 
