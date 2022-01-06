@@ -36,6 +36,7 @@ bool bang_bang_control(float voltage, float current, bool state)
 }
 
 //TEST2
+//TEST3
 
 int main() {
 
