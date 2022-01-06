@@ -36,7 +36,7 @@ bool bang_bang_control(float voltage, float current, bool state)
 }
 
 //fuck you ines2
-
+//Test3
 int main() {
 
 	float u = 0.0f;
