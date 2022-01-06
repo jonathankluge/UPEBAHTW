@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <iostream>
 
 bool bang_bang_control(float voltage, float current, bool state)
 {
