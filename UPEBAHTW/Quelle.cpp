@@ -4,11 +4,13 @@
 #include<math.h>
 #include<fstream>
 #include<string>
+#include <cstdlib>
 
 
 
 
 using namespace std;
+using std::ofstream;
 
 bool bang_bang_control(float voltage, float current, bool state)
 {
@@ -87,23 +89,31 @@ int main() {
 	float timer = 0.0f;				//interner Zeitgeber der zurückgesetzt wird beim Umschalten von state
 	float t = 0.0f;					//gesamte Zeit
 	float d_t = 100E-6;				//Zeit fuer aktuellen Stromwert
+	float string[4] = { t, current, voltage, state };
+	int i ;
+
+
+	ofstream outfile;
+	outfile.open("Outfile.txt");
+
 	
-	ofstream myfile;
-	myfile.open("Strom.txt");
-	myfile << "Strom\n";
-
-	/*ofstream myfile2;				//zusatz für Ausgabe der Daten in Textdatei (Strom und Zeit)
-	myfile2.open("Zeit.txt");
-	myfile2 << "Zeit\n";*/
-
 
 	while (voltage < u_target) 
 	{
 	   	t = t + d_t;
 		q = q + current * d_t; 
 		voltage = q / c; 
-		//myfile << current <<"\n";
-		//myfile2 << t << "\n";
+		
+		if (outfile.is_open())
+		{
+			outfile <<"	" << state <<"	" << current <<"	" << t <<"	"<< voltage << endl;
+		}
+		else
+		{
+			cout << "failed to create outfile" << endl;
+
+		}
+		
 
 		if (current >= 100.0000001 || current <= 39.999999)
 		{
@@ -119,8 +129,8 @@ int main() {
 
 		cout<<" Zustand:"<<state<<" Strom:"<<current<<" Zeit gesamt: "<<t<<" Spannung:"<<voltage<< endl;
 	}
-	//myfile.close();
-	//myfile2.close();
+	outfile.close();
+	
 
 	return 0;
 
