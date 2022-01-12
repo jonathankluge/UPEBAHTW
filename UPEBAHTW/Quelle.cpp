@@ -57,7 +57,7 @@ bool bang_bang_control(float voltage, float current, bool state)
 
 float strom(float t, bool state)		
 {
-	int Anstieg = 66666;			 //Anstieg in A/s
+	int Anstieg = 66666;			 //66666Anstieg in A/s
 	int vorz = 0;
 	float n = 0.0f;					//Startwert
 
@@ -84,17 +84,17 @@ int main() {
 	float current = 0.0f;			//Stromstartwert
 	bool state = false;				//Anfangszustand
 	float c = 88;					//Kapazität eines Kondensators
-	float u_target = 102.0f;		//maximale Ladespannung
+	float u_target = 0.1f;		    //maximale Ladespannung
 	float q = 0.0f;					//Ladung
 	float timer = 0.0f;				//interner Zeitgeber der zurückgesetzt wird beim Umschalten von state
 	float t = 0.0f;					//gesamte Zeit
 	float d_t = 100E-6;				//Zeit fuer aktuellen Stromwert
 	float string[4] = { t, current, voltage, state };
-	int i ;
+
 
 
 	ofstream outfile;
-	outfile.open("Outfile.txt");
+	outfile.open("Outfile.csv");
 
 	
 
@@ -106,7 +106,7 @@ int main() {
 		
 		if (outfile.is_open())
 		{
-			outfile <<"	" << state <<"	" << current <<"	" << t <<"	"<< voltage << endl;
+			outfile << state <<";" << current <<";" << t <<";"<< voltage << endl;
 		}
 		else
 		{
@@ -131,6 +131,10 @@ int main() {
 	}
 	outfile.close();
 	
+	std::string filename = "/Users/Jonathan/source/repos/UPEBA/UPEBAHTW/Graph_Plot.py";
+	std::string command = "python";
+	command += filename;
+	system(command.c_str());
 
 	return 0;
 
