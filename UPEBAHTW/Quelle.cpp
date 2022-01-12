@@ -141,7 +141,7 @@ int main() {
 	}
 	outfile.close();
 	
-	std::string filename = "/Users/Jonathan/source/repos/UPEBA/UPEBAHTW/Graph_Plot.py"; //Aufruf der Python Datei
+	std::string filename = "/Users/Jonathan/source/repos/UPEBA/UPEBAHTW/Graph_Plot.py"; //Aufruf der Python Datei -->Is abhängig vom Nutzer anzupassen
 	std::string command = "python";
 	command += filename;
 	system(command.c_str());
