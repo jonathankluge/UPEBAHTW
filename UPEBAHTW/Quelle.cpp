@@ -17,8 +17,8 @@ bool bang_bang_control(float voltage, float current, bool state)
 	bool ret = false;
 
 	float u_cond = 102; //Spannung am Kondensator wenn voll aufgeladen
-	float i_cond = 70;  //Strommittelwert
-	float delta_i = 30; //Hysterese
+	float i_cond = 70;  //Strommittelwert-->Sollte durch Nutzer einstellbar sein
+	float delta_i = 30; //Hysterese -->Sollte ebenfalls von Nutzer einstellbar sein
 	bool IGBT = 0;
 
 	if (voltage >= u_cond)
@@ -80,15 +80,15 @@ float strom(float t, bool state)
 
 int main() {
 
-	float voltage = 0.0f;			//Spannungsstartwert
-	float current = 0.0f;			//Stromstartwert
-	bool state = false;				//Anfangszustand
+	float voltage = 0.0f;			//Spannungwer-->Wird über Spannungsmessung übergeben
+	float current = 0.0f;			//Stromstartwer-->Wird über Stromsmessung übergeben
+	bool state = false;				//Anfangszustand--> Übergabe sollte hier ebenfalls durchgeführt werden
 	float c = 88;					//Kapazität eines Kondensators
-	float u_target = 0.1f;		    //maximale Ladespannung
+	float u_target = 0.1f;		    //maximale Ladespannung, für testzewcke auf 0.1V gestetzt--> in realer Anwendung auf 102V setzen
 	float q = 0.0f;					//Ladung
 	float timer = 0.0f;				//interner Zeitgeber der zurückgesetzt wird beim Umschalten von state
 	float t = 0.0f;					//gesamte Zeit
-	float d_t = 100E-6;				//Zeit fuer aktuellen Stromwert
+	float d_t = 100E-5;				//Zeit fuer aktuellen Stromwert
 	float string[4] = { t, current, voltage, state };
 
 
@@ -96,7 +96,16 @@ int main() {
 	ofstream outfile;
 	outfile.open("Outfile.csv");
 
-	
+	if (current > 500 || voltage<0 ) { //Plausibilitätsprüfung
+		
+		state = 0;
+		cout << "caution Current to high! " << endl;
+		cout << " Check Polarity of voltage measurement" << endl;
+
+
+	}
+	else
+	{
 
 	while (voltage < u_target) 
 	{
@@ -104,7 +113,7 @@ int main() {
 		q = q + current * d_t; 
 		voltage = q / c; 
 		
-		if (outfile.is_open())
+		if (outfile.is_open())				// Abfrage, falss csv Datei nicht geöffnet werden kann
 		{
 			outfile << state <<";" << current <<";" << t <<";"<< voltage << endl;
 		}
@@ -115,27 +124,29 @@ int main() {
 		}
 		
 
-		if (current >= 100.0000001 || current <= 39.999999)
+		if (current >= 100.0000001 || current <= 39.999999) 
 		{
-			timer = 0.0f;					//interner Zeitgeber für Berechnung des aktuellen Stromwertes 
+			timer = 0.0f;					//interner Zeitgeber für Berechnung des aktuellen Stromwertes, wird zurückgesetzt
+											// wenn Stromfunktion ihren minimal bzw. Maximalwert erreicht
 		}
 		else
 		{
-			timer = timer + d_t;
+			timer = timer + d_t;				
 		}
 
-		current = strom(timer, state); 
-		state = bang_bang_control(voltage, current, state);
-
-		cout<<" Zustand:"<<state<<" Strom:"<<current<<" Zeit gesamt: "<<t<<" Spannung:"<<voltage<< endl;
+		current = strom(timer, state);		// berechnung des Stromwertes anhand der aktuellen zeit und des IGBT zustandes
+		state = bang_bang_control(voltage, current, state); //Zustandskontrolle anhand der Aktuellen Werte, des Stromes, der Spannung 
+															//und des vorherigen Zustandes
+		cout<<" Zeit gesamt:"<<t<< "Zustand:"<< state << " Strom:" << current  << " Spannung:" << voltage << endl; //Ausgabe von Strom, Spannung, Zustand, und Zeit
 	}
 	outfile.close();
 	
-	std::string filename = "/Users/Jonathan/source/repos/UPEBA/UPEBAHTW/Graph_Plot.py";
+	std::string filename = "/Users/Jonathan/source/repos/UPEBA/UPEBAHTW/Graph_Plot.py"; //Aufruf der Python Datei
 	std::string command = "python";
 	command += filename;
 	system(command.c_str());
 
+	}	
 	return 0;
 
 }
